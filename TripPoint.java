@@ -154,17 +154,31 @@ public class TripPoint {
 	
 	//returns total time moving in hours 
 	public static double movingTime() {
+		if(movingTrip.size() < 2) 
+		{return 0.0;}
 		
+		int min = (movingTrip.size()-1)*5;
+		double hours = min / 60.0;
+		return hours;
 	}
 	
 	//returns the total time stopped in hours
 	public static double stoppedTime() {
-		
+		return totalTime() - movingTime();
 	}
 	
 	//returns the average moving speed during a trip in km
 	public static double avgMovingSpeed() {
+		double time = movingTime();
+		if(time == 0.0)
+		{return 0.0;}
 		
+		double distance = 0.0;
+		for(int i =0; i < movingTrip.size()-1; i++) {
+			distance = distance + haversineDistance(movingTrip.get(i), movingTrip.get(i+1));
+		}
+		
+		return distance/time;
 	}
 	
 }
