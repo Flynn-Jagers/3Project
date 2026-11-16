@@ -92,7 +92,7 @@ public class TripPoint {
 		try {
 			Scanner scan = new Scanner(doc);
 			
-			if(scan.hasNextLine()) //SHOULD skipp the header 
+			if(scan.hasNextLine()) //SHOULD skip the header 
 			{scan.nextLine();}
 		
 		while(scan.hasNextLine()) {
@@ -125,7 +125,26 @@ public class TripPoint {
 	
 	//returns the total number of stops during the trip, anything less than .6km of movement is a stop
 	public static int h1StopDetection() {
+		int numStops = 0;
+		double moveThreshold = .6;
 		
+		movingTrip = new ArrayList<TripPoint>();
+		if(trip.isEmpty()) 
+		{return 0;}
+		
+		movingTrip.add(trip.get(0));
+		
+		for(int i = 1; i < trip.size(); i++) {
+			TripPoint previous = trip.get(i-1);
+			TripPoint now = trip.get(i);
+			
+			if(haversineDistance(previous, now) <= moveThreshold) {
+				numStops = numStops + 1;
+			}
+			else 
+			{movingTrip.add(now);}
+		}
+		return numStops;
 	}
 	
 	//returns the total number of stops during the trip, anything less than .5km of movement is a stop
