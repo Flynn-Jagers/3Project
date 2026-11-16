@@ -149,7 +149,47 @@ public class TripPoint {
 	
 	//returns the total number of stops during the trip, anything less than .5km of movement is a stop
 	public static int h2StopDetection() {
+		movingTrip = new ArrayList<TripPoint>();
+		double moveThreshold2 = .5;
+		int numStops = 0;
+		int index = 0;
 		
+		while (index < trip.size()) {
+			ArrayList<TripPoint> group = new ArrayList<TripPoint>();
+			group.add(trip.get(index));
+			
+			int j = index + 1;
+			while(j < trip.size()) {
+				TripPoint a = trip.get(j);
+				boolean inRad = false;
+				
+				for(int k = 0; k < group.size(); k++) {
+					if(haversineDistance(group.get(k), a) <= moveThreshold2) {
+						inRad = true;
+						break;
+					}
+				}
+				
+				if(inRad) {
+					group.add(a);
+					j++;
+				}
+				else 
+				{break;}
+			}
+			
+			if(group.size() >= 3) {
+				numStops = numStops + group.size();
+			}
+			else {
+				for(int k =0; k < group.size(); k++) 
+				{movingTrip.add(group.get(k));}
+			}
+			
+			index = j;
+		}
+		
+		return numStops;
 	}
 	
 	//returns total time moving in hours 
